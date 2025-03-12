@@ -51,14 +51,12 @@ io.on('connection', async(socket) => {
         let result ;
         try{
             //store the messages in the database 
-            result = await db.run('INSERT INTO messages (content, client_offset) VALUES (?)',msg,clientOffSet);
+            result = await db.run('INSERT INTO messages (content, client_offset) VALUES (?,?)',msg,clientOffSet);
         } catch (e){
             //return; //handle failure
             if (e.errno === 19){ //sqlite constraint
                 //message already inserted
-                callback({
-                    status: 'ok'
-                });
+                callback();
             }else{
                 //do nothing, let client retry
             }
@@ -67,9 +65,7 @@ io.on('connection', async(socket) => {
 
         console.log("message :" + msg);
         io.emit('chat message', msg ,result.lastID); //row id of the inserted row
-        callback({
-            status: 'ok'
-        });
+        callback();
         //console.log(msg); prints in server terminal
     });
     if (!socket.recovered){

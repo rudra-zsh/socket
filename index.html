@@ -30,7 +30,7 @@
             },
             //enable retries
             ackTimeout: 1000000,
-            retries:3
+            retries:3,
 
         });
 
@@ -43,7 +43,9 @@
             if(input.value){ //if there is a vlue 
                 //compute a unique offset
                 const clientOffSet = `${socket.id} - ${counter++}`;
-                socket.emit('chat message', input.value,clientOffSet);
+                socket.emit('chat message', input.value,clientOffSet, ()=>{
+                    console.log('message ackw by the server');
+                });
                 //socket.timeout(5000).emit('chat message', input.value); //pass the value 
                 input.value =''; //making it null
                 //console.log(res.status); //res not defined.(may be something that I am missing)
